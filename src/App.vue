@@ -12,13 +12,19 @@ body {
 
 /* Light Mode */
 .light-mode {
-  background: #f4f7f9;
+  background-image: url('https://tg-image.newsss.workers.dev/file/BQACAgIAAyEGAASKDp_bAANBaDqjsk6x_4iZPvVygAIW5rcS7_gAAu52AAKnntBJtZuXoA3jBYw2BA.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #333;
 }
 
 /* Dark Mode */
 .dark-mode {
-  background: #1a1a1a;
+  background-image: url('https://tg-image.newsss.workers.dev/file/BQACAgIAAyEGAASKDp_bAANCaDsNCS7wo13abjf5rf2Tk08cz8cAArlzAAKnnthJrZOBGnSDepw2BA.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: #f0f0f0;
 }
 
@@ -39,11 +45,11 @@ body {
 }
 
 .light-mode .el-card {
-  background-color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .dark-mode .el-card {
-  background-color: #262626 !important;
+  background-color: rgba(38, 38, 38, 0.8) !important;
   color: #f0f0f0 !important;
 }
 
