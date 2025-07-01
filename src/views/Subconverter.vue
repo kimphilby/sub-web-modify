@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-container">
     <el-row style="margin-top: 10px">
       <el-col>
         <el-card>
@@ -192,8 +192,11 @@
                   @click="centerDialogVisible = true">视频教程
                 </el-button>
               </el-form-item>
-
-              
+            </el-form>
+          </el-container>
+        </el-card>
+      </el-col>
+    </el-row>
 
     <el-dialog title="请选择需要观看的视频教程" :visible.sync="centerDialogVisible" :show-close="false" width="40vh" top="30vh"
       center>
@@ -305,7 +308,7 @@ const downld = 'http://' + window.location.host + '/download.html'
 export default {
   data() {
     return {
-      isDarkMode: false, // 【修改】新增状态
+      isDarkMode: false,
       backendVersion: "",
       centerDialogVisible: false,
       activeName: 'first',
@@ -763,8 +766,6 @@ export default {
     };
   },
 
-  
-
   created() {
     document.title = "ZRF.ME | 在线订阅转换工具";
     this.isPC = this.$getOS().isPc;
@@ -820,7 +821,6 @@ export default {
           document.getElementsByTagName('body')[0].setAttribute('class', 'dark-mode');
         }
       }
-      // 【修改】同步 isDarkMode 状态
       this.isDarkMode = document.getElementsByTagName('body')[0].className === 'dark-mode';
     },
     change() {
@@ -828,13 +828,11 @@ export default {
       if (zhuti === 'light-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'dark-mode');
         window.localStorage.setItem('localTheme', 'dark-mode');
-        // 【修改】更新状态
         this.isDarkMode = true;
       }
       if (zhuti === 'dark-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'light-mode');
         window.localStorage.setItem('localTheme', 'light-mode');
-        // 【修改】更新状态
         this.isDarkMode = false;
       }
     },
@@ -1243,4 +1241,96 @@ export default {
 };
 </script>
 
+<style lang="scss" scoped>
+.el-input-group__append,
+.el-input-group__prepend {
+  background-color: #409eff;
+  color: #ffffff;
+  border: 0;
+}
 
+.el-select {
+  width: 100%;
+}
+
+.el-form-item {
+  margin-bottom: 22px;
+}
+
+.el-divider--horizontal {
+  margin: 20px 0;
+}
+
+.copy-content .el-input-group__append {
+  border-radius: 0 8px 8px 0 !important;
+}
+
+.eldiy .el-row {
+  margin-bottom: 10px;
+}
+
+.msgbox {
+  border-radius: 12px;
+}
+
+/* Header Icons */
+.dianbao, .channel {
+  color: #54a5da;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+.dianbao:hover, .channel:hover {
+  transform: scale(1.1);
+}
+
+.gayhub {
+  color: #6f7478;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+.gayhub:hover {
+  transform: scale(1.1);
+}
+
+.bilibili, .blog {
+  color: #e67b9a;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+.bilibili:hover, .blog:hover {
+  transform: scale(1.1);
+}
+
+.youguan {
+  color: #f26d6d;
+  cursor: pointer;
+  font-size: 20px;
+  transition: transform 0.2s;
+}
+.youguan:hover {
+  transform: scale(1.1);
+}
+
+/* Main container */
+.main-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Action Buttons */
+.el-button--danger {
+    box-shadow: 0 2px 8px rgba(245, 108, 108, 0.3);
+}
+
+.el-button--primary {
+    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
+}
+
+.el-button--success {
+    box-shadow: 0 2px 8px rgba(103, 194, 58, 0.3);
+}
+
+</style>
