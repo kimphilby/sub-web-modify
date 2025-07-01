@@ -767,7 +767,7 @@ export default {
   },
 
   created() {
-    document.title = "ZRF.ME | 在线订阅转换工具";
+    document.title = "在线订阅转换工具";
     this.isPC = this.$getOS().isPc;
   },
   mounted() {
@@ -836,56 +836,13 @@ export default {
         this.isDarkMode = false;
       }
     },
-    tanchuang() {
-      this.$alert(`<div style="text-align:center; font-size: 16px;"><strong>周润发 | 提供维护:</strong> <a href="https://d.zrf.me/tgq" target="_blank" style="color: #409EFF; text-decoration: none;">TG群组</a> <a href="https://d.zrf.me/blog" target="_blank" style="color: #409EFF; text-decoration: none;">Blog</a></div>`, '信息面板', {
-        confirmButtonText: '确定',
-        dangerouslyUseHTMLString: true,
-        customClass: 'msgbox'
-      });
-    },
     onCopy() {
       this.$message.success("已复制");
     },
     goToProject() {
       window.open(project);
     },
-    gotoTgChannel() {
-      window.open(tgBotLink);
-    },
-    gotoBiliBili() {
-      window.open(bzlink);
-    },
-    gotoYouTuBe() {
-      window.open(yglink);
-    },
-    gotoBlog() {
-      window.open(blogLink);
-    },
-    toolsDown() {
-      window.open(downld);
-    },
-    gotoBasicVideo() {
-      this.$alert("别忘了关注友善的肥羊哦！", {
-        type: "warning",
-        confirmButtonText: '确定',
-        customClass: 'msgbox',
-        showClose: false,
-      })
-        .then(() => {
-          window.open(basicVideo);
-        });
-    },
-    gotoAdvancedVideo() {
-      this.$alert("别忘了关注友善的肥羊哦！", {
-        type: "warning",
-        confirmButtonText: '确定',
-        customClass: 'msgbox',
-        showClose: false,
-      })
-        .then(() => {
-          window.open(advancedVideo);
-        });
-    },
+
     makeUrl() {
       if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
         this.$message.error("订阅链接与客户端为必填项");
