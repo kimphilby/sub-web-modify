@@ -1,5 +1,5 @@
 <template>
-  <div class="main-container">
+  <div>
     <el-row style="margin-top: 10px">
       <el-col>
         <el-card>
@@ -192,8 +192,29 @@
                   @click="centerDialogVisible = true">视频教程
                 </el-button>
               </el-form-item>
+
+              <!-- 【修改】只在非深色模式下显示评论开关 -->
+              <el-form-item v-if="!isDarkMode" label-width="0px" style="margin-top: 10px; text-align: center;">
+                <el-switch
+                  v-model="showComments"
+                  active-text="显示评论区"
+                  inactive-text="隐藏评论区">
+                </el-switch>
+              </el-form-item>
+
             </el-form>
           </el-container>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <el-row v-show="showComments" style="margin-top: 10px;">
+      <el-col>
+        <el-card>
+          <div slot="header">
+            <div style="text-align:center;font-size:15px">评 论 交 流</div>
+          </div>
+          <div id="twikoo-comment"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -308,7 +329,9 @@ const downld = 'http://' + window.location.host + '/download.html'
 export default {
   data() {
     return {
-      isDarkMode: false,
+      showComments: false,
+      twikooInitialized: false,
+      isDarkMode: false, // 【修改】新增状态
       backendVersion: "",
       centerDialogVisible: false,
       activeName: 'first',
@@ -766,8 +789,29 @@ export default {
     };
   },
 
+  watch: {
+    showComments(newValue) {
+      if (newValue === true && !this.twikooInitialized) {
+        this.$nextTick(() => {
+          const currentTheme = document.body.className.includes('dark-mode') ? 'dark' : 'light';
+          try {
+            twikoo.init({
+              envId: 'https://twikoo.zrf.me',
+              el: '#twikoo-comment',
+              lang: 'zh-CN',
+              theme: currentTheme
+            });
+            this.twikooInitialized = true;
+          } catch (e) {
+            console.error("Twikoo initialization failed:", e);
+          }
+        });
+      }
+    }
+  },
+
   created() {
-    document.title = "在线订阅转换工具";
+    document.title = "ZRF.ME | 在线订阅转换工具";
     this.isPC = this.$getOS().isPc;
   },
   mounted() {
@@ -821,6 +865,7 @@ export default {
           document.getElementsByTagName('body')[0].setAttribute('class', 'dark-mode');
         }
       }
+      // 【修改】同步 isDarkMode 状态
       this.isDarkMode = document.getElementsByTagName('body')[0].className === 'dark-mode';
     },
     change() {
@@ -828,13 +873,23 @@ export default {
       if (zhuti === 'light-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'dark-mode');
         window.localStorage.setItem('localTheme', 'dark-mode');
+        // 【修改】更新状态并强制关闭评论
         this.isDarkMode = true;
+        this.showComments = false;
       }
       if (zhuti === 'dark-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'light-mode');
         window.localStorage.setItem('localTheme', 'light-mode');
+        // 【修改】更新状态
         this.isDarkMode = false;
       }
+    },
+    tanchuang() {
+      this.$alert(`<div style="text-align:center; font-size: 16px;"><strong>周润发 | 提供维护:</strong> <a href="https://d.zrf.me/tgq" target="_blank" style="color: #409EFF; text-decoration: none;">TG群组</a> <a href="https://d.zrf.me/blog" target="_blank" style="color: #409EFF; text-decoration: none;">Blog</a></div>`, '信息面板', {
+        confirmButtonText: '确定',
+        dangerouslyUseHTMLString: true,
+        customClass: 'msgbox'
+      });
     },
     onCopy() {
       this.$message.success("已复制");
@@ -842,7 +897,43 @@ export default {
     goToProject() {
       window.open(project);
     },
-
+    gotoTgChannel() {
+      window.open(tgBotLink);
+    },
+    gotoBiliBili() {
+      window.open(bzlink);
+    },
+    gotoYouTuBe() {
+      window.open(yglink);
+    },
+    gotoBlog() {
+      window.open(blogLink);
+    },
+    toolsDown() {
+      window.open(downld);
+    },
+    gotoBasicVideo() {
+      this.$alert("别忘了关注友善的肥羊哦！", {
+        type: "warning",
+        confirmButtonText: '确定',
+        customClass: 'msgbox',
+        showClose: false,
+      })
+        .then(() => {
+          window.open(basicVideo);
+        });
+    },
+    gotoAdvancedVideo() {
+      this.$alert("别忘了关注友善的肥羊哦！", {
+        type: "warning",
+        confirmButtonText: '确定',
+        customClass: 'msgbox',
+        showClose: false,
+      })
+        .then(() => {
+          window.open(advancedVideo);
+        });
+    },
     makeUrl() {
       if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
         this.$message.error("订阅链接与客户端为必填项");
@@ -1198,96 +1289,19 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.el-input-group__append,
-.el-input-group__prepend {
-  background-color: #409eff;
-  color: #ffffff;
-  border: 0;
+<style>
+/* 修正 Twikoo 在 el-card 内的样式 */
+#twikoo-comment .tk-main {
+  background-color: transparent !important;
 }
 
-.el-select {
-  width: 100%;
+/* 
+  新增：彻底隐藏图片上传功能相关的两个元素
+  1. 隐藏图片上传的图标按钮
+  2. 隐藏备用的 "选择文件" 输入框
+*/
+.tk-submit-action-icon[title="图片"],
+.tk-input-image {
+  display: none !important;
 }
-
-.el-form-item {
-  margin-bottom: 22px;
-}
-
-.el-divider--horizontal {
-  margin: 20px 0;
-}
-
-.copy-content .el-input-group__append {
-  border-radius: 0 8px 8px 0 !important;
-}
-
-.eldiy .el-row {
-  margin-bottom: 10px;
-}
-
-.msgbox {
-  border-radius: 12px;
-}
-
-/* Header Icons */
-.dianbao, .channel {
-  color: #54a5da;
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.2s;
-}
-.dianbao:hover, .channel:hover {
-  transform: scale(1.1);
-}
-
-.gayhub {
-  color: #6f7478;
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.2s;
-}
-.gayhub:hover {
-  transform: scale(1.1);
-}
-
-.bilibili, .blog {
-  color: #e67b9a;
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.2s;
-}
-.bilibili:hover, .blog:hover {
-  transform: scale(1.1);
-}
-
-.youguan {
-  color: #f26d6d;
-  cursor: pointer;
-  font-size: 20px;
-  transition: transform 0.2s;
-}
-.youguan:hover {
-  transform: scale(1.1);
-}
-
-/* Main container */
-.main-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-/* Action Buttons */
-.el-button--danger {
-    box-shadow: 0 2px 8px rgba(245, 108, 108, 0.3);
-}
-
-.el-button--primary {
-    box-shadow: 0 2px 8px rgba(64, 158, 255, 0.3);
-}
-
-.el-button--success {
-    box-shadow: 0 2px 8px rgba(103, 194, 58, 0.3);
-}
-
 </style>
