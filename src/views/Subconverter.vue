@@ -193,31 +193,7 @@
                 </el-button>
               </el-form-item>
 
-              <!-- 【修改】只在非深色模式下显示评论开关 -->
-              <el-form-item v-if="!isDarkMode" label-width="0px" style="margin-top: 10px; text-align: center;">
-                <el-switch
-                  v-model="showComments"
-                  active-text="显示评论区"
-                  inactive-text="隐藏评论区">
-                </el-switch>
-              </el-form-item>
-
-            </el-form>
-          </el-container>
-        </el-card>
-      </el-col>
-    </el-row>
-
-    <el-row v-show="showComments" style="margin-top: 10px;">
-      <el-col>
-        <el-card>
-          <div slot="header">
-            <div style="text-align:center;font-size:15px">评 论 交 流</div>
-          </div>
-          <div id="twikoo-comment"></div>
-        </el-card>
-      </el-col>
-    </el-row>
+              
 
     <el-dialog title="请选择需要观看的视频教程" :visible.sync="centerDialogVisible" :show-close="false" width="40vh" top="30vh"
       center>
@@ -329,8 +305,6 @@ const downld = 'http://' + window.location.host + '/download.html'
 export default {
   data() {
     return {
-      showComments: false,
-      twikooInitialized: false,
       isDarkMode: false, // 【修改】新增状态
       backendVersion: "",
       centerDialogVisible: false,
@@ -789,26 +763,7 @@ export default {
     };
   },
 
-  watch: {
-    showComments(newValue) {
-      if (newValue === true && !this.twikooInitialized) {
-        this.$nextTick(() => {
-          const currentTheme = document.body.className.includes('dark-mode') ? 'dark' : 'light';
-          try {
-            twikoo.init({
-              envId: 'https://twikoo.zrf.me',
-              el: '#twikoo-comment',
-              lang: 'zh-CN',
-              theme: currentTheme
-            });
-            this.twikooInitialized = true;
-          } catch (e) {
-            console.error("Twikoo initialization failed:", e);
-          }
-        });
-      }
-    }
-  },
+  
 
   created() {
     document.title = "ZRF.ME | 在线订阅转换工具";
@@ -873,9 +828,8 @@ export default {
       if (zhuti === 'light-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'dark-mode');
         window.localStorage.setItem('localTheme', 'dark-mode');
-        // 【修改】更新状态并强制关闭评论
+        // 【修改】更新状态
         this.isDarkMode = true;
-        this.showComments = false;
       }
       if (zhuti === 'dark-mode') {
         document.getElementsByTagName('body')[0].setAttribute('class', 'light-mode');
@@ -1289,19 +1243,4 @@ export default {
 };
 </script>
 
-<style>
-/* 修正 Twikoo 在 el-card 内的样式 */
-#twikoo-comment .tk-main {
-  background-color: transparent !important;
-}
 
-/* 
-  新增：彻底隐藏图片上传功能相关的两个元素
-  1. 隐藏图片上传的图标按钮
-  2. 隐藏备用的 "选择文件" 输入框
-*/
-.tk-submit-action-icon[title="图片"],
-.tk-input-image {
-  display: none !important;
-}
-</style>
